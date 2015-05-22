@@ -3,6 +3,6 @@
 
 cat <<EOF
 ---
-config_vars:
-    LD_LIBRARY_PATH: /app/lib
+default_process_types:
+    web: LD_LIBRARY_PATH=.lib ./dotbot
 EOF

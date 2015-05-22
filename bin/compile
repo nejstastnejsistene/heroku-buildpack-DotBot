@@ -23,9 +23,6 @@ if [ ! -d libwebsockets ]; then
     make
 fi
 
-mkdir -p /app
-cp -r $LIBRARY_PATH /app
-
 export CPATH=$CACHE_DIR/libwebsockets:$CACHE_DIR/libwebsockets/lib
 export LIBRARY_PATH=$CACHE_DIR/libwebsockets/lib
 
@@ -33,3 +30,4 @@ echo "-----> installing DotBot"
 cd $BUILD_DIR
 make
 
+cp -r $LIBRARY_PATH .lib
