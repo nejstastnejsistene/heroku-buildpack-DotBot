@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# bin/detect <build-dir> <cache-dir>
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+
+mkdir -p $CACHE_DIR
+cd $CACHE_DIR
+if [ ! -f bin/cmake ]; then
+    echo "-----> installing cmake"
+    if [ ! -f cmake.tar.gz ]; then
+        curl https://s3.amazonaws.com/mergeguard/cmake.tar.gz -s -O
+    fi
+    tar -xf cmake.tar.gz
+fi
+
+cd $CACHE_DIR
+if [ ! -d libwebsockets ]; then
+    echo "-----> installing libwebsockets"
+    git clone git://git.libwebsockets.org/libwebsockets
+    cd libwebsockets
+    ../bin/cmake .
+    make
+fi
+
+mkdir -p /app
+cp -r $LIBRARY_PATH /app
+
+export CPATH=$CACHE_DIR/libwebsockets:$CACHE_DIR/libwebsockets/lib
+export LIBRARY_PATH=$CACHE_DIR/libwebsockets/lib
+
+echo "-----> installing DotBot"
+cd $BUILD_DIR
+make
+

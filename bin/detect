@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# bin/detect <build-dir>
+
+grep DotBot $1/README.md >/dev/null 2>&1 && echo DotBot || exit 1
