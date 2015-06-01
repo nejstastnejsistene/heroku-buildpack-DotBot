@@ -48,7 +48,7 @@ for src in json/.libs/*.so*; do
     ln $dest $(echo $dest | sed -e 's/-c//') # Alias libjson-c to libjson
 done
 
-export CPATH=$CACHE_DIR:$CACHE_DIR/libwebsockets:$CACHE_DIR/libwebsockets/lib
+export C_INCLUDE_PATH=$CACHE_DIR:$CACHE_DIR/libwebsockets:$CACHE_DIR/libwebsockets/lib
 
 echo "-----> installing DotBot"
 cd $BUILD_DIR
