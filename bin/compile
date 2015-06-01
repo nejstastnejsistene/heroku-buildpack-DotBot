@@ -4,7 +4,11 @@
 BUILD_DIR=$1
 CACHE_DIR=$2
 
+export LIBRARY_PATH=$BUILD_DIR/.lib
+
 mkdir -p $CACHE_DIR
+mkdir -p $LIBRARY_PATH
+
 cd $CACHE_DIR
 if [ ! -f bin/cmake ]; then
     echo "-----> installing cmake"
@@ -23,11 +27,29 @@ if [ ! -d libwebsockets ]; then
     make
 fi
 
-export CPATH=$CACHE_DIR/libwebsockets:$CACHE_DIR/libwebsockets/lib
-export LIBRARY_PATH=$CACHE_DIR/libwebsockets/lib
+cd $CACHE_DIR
+if [ ! -d json ]; then
+    echo "-----> installing json-c"
+    git clone git://github.com/json-c/json-c json
+    cd json
+    sh autogen.sh
+    ./configure
+    make
+fi
+
+echo "-----> preparing .lib"
+cd $CACHE_DIR
+for src in libwebsockets/lib/*.so*; do
+    cp $src $LIBRARY_PATH/$(basename $src)
+done
+for src in json/.libs/*.so*; do
+    dest=$LIBRARY_PATH/$(basename $src)
+    cp $src $dest
+    ln $dest $(echo $dest | sed -e 's/-c//') # Alias libjson-c to libjson
+done
+
+export CPATH=$CACHE_DIR:$CACHE_DIR/libwebsockets:$CACHE_DIR/libwebsockets/lib
 
 echo "-----> installing DotBot"
 cd $BUILD_DIR
-make
-
-cp -r $LIBRARY_PATH .lib
+make || exit 1
