@@ -4,5 +4,5 @@
 cat <<EOF
 ---
 default_process_types:
-    web: LD_LIBRARY_PATH=.lib ./dotbot
+    web: LD_LIBRARY_PATH=.lib ./server
 EOF
