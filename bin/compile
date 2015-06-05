@@ -52,4 +52,4 @@ export C_INCLUDE_PATH=$CACHE_DIR:$CACHE_DIR/libwebsockets:$CACHE_DIR/libwebsocke
 
 echo "-----> installing DotBot"
 cd $BUILD_DIR
-make || exit 1
+make server || exit 1
